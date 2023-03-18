@@ -1,0 +1,92 @@
+.camqr-container {
+  .camqr-content {
+    background-color: #f3f3f3;
+    margin: 0 31px;
+    padding: 10px 0;
+    border: 1px solid #35353533;
+    border-radius: 7px;
+
+    .response-content {
+      border-radius: 5px;
+
+      .response-view-content {
+        .aligments-content {
+          display: flex;
+          width: 100%;
+          align-items: center;
+          justify-content: space-around;
+          align-content: center;
+          flex-wrap: nowrap;
+          flex-direction: row;
+
+          .aligments-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            align-content: flex-start;
+            flex-wrap: nowrap;
+            gap: 30px;
+
+            .aligment-item {
+              height: 40px;
+              width: 100%;
+              .ant-checkbox-wrapper {
+                span {
+                  font-size: 20px;
+                  font-weight: 500;
+
+                  &.ant-checkbox-inner {
+                    width: 30px;
+                    height: 30px;
+                  }
+                }
+              }
+            }
+          }
+          .aligments-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            align-content: flex-start;
+            flex-wrap: nowrap;
+            gap: 30px;
+
+            .aligment-item {
+              p {
+                font-size: 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 2px;
+  }
+
+  .info-qr {
+    .subtitle {
+      font-size: 20px;
+    }
+
+    .image-description-content {
+      width: 300px;
+      height: 300px;
+
+      .image-description {
+        width: 100%;
+      }
+    }
+  }
+
+  .my-camera {
+    margin: auto;
+  }
+}
