@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/tedy-ai/static/css/main.2190504b.chunk.css",
+    "main.js": "/tedy-ai/static/js/main.fc87e2f1.chunk.js",
+    "main.js.map": "/tedy-ai/static/js/main.fc87e2f1.chunk.js.map",
+    "runtime-main.js": "/tedy-ai/static/js/runtime-main.deda551c.js",
+    "runtime-main.js.map": "/tedy-ai/static/js/runtime-main.deda551c.js.map",
+    "static/css/2.083437b2.chunk.css": "/tedy-ai/static/css/2.083437b2.chunk.css",
+    "static/js/2.c03683e0.chunk.js": "/tedy-ai/static/js/2.c03683e0.chunk.js",
+    "static/js/2.c03683e0.chunk.js.map": "/tedy-ai/static/js/2.c03683e0.chunk.js.map",
+    "static/js/3.58aa3a4b.chunk.js": "/tedy-ai/static/js/3.58aa3a4b.chunk.js",
+    "static/js/3.58aa3a4b.chunk.js.map": "/tedy-ai/static/js/3.58aa3a4b.chunk.js.map",
+    "index.html": "/tedy-ai/index.html",
+    "static/css/2.083437b2.chunk.css.map": "/tedy-ai/static/css/2.083437b2.chunk.css.map",
+    "static/css/main.2190504b.chunk.css.map": "/tedy-ai/static/css/main.2190504b.chunk.css.map",
+    "static/js/2.c03683e0.chunk.js.LICENSE.txt": "/tedy-ai/static/js/2.c03683e0.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.deda551c.js",
+    "static/css/2.083437b2.chunk.css",
+    "static/js/2.c03683e0.chunk.js",
+    "static/css/main.2190504b.chunk.css",
+    "static/js/main.fc87e2f1.chunk.js"
+  ]
+}
