@@ -13,49 +13,28 @@
         .aligments-content {
           display: flex;
           width: 100%;
-          align-items: center;
+          align-items: flex-start;
           justify-content: space-around;
-          align-content: center;
+          align-content: flex-start;
           flex-wrap: nowrap;
-          flex-direction: row;
+          flex-direction: column;
+          gap: 20px;
 
-          .aligments-left {
+          .aligment-item {
+            height: 40px;
+            width: 100%;
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: center;
-            align-content: flex-start;
-            flex-wrap: nowrap;
-            gap: 30px;
-
-            .aligment-item {
-              height: 40px;
-              width: 100%;
-              .ant-checkbox-wrapper {
-                span {
-                  font-size: 20px;
-                  font-weight: 500;
-
-                  &.ant-checkbox-inner {
-                    width: 30px;
-                    height: 30px;
-                  }
-                }
-              }
-            }
-          }
-          .aligments-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: center;
-            align-content: flex-start;
-            flex-wrap: nowrap;
-            gap: 30px;
-
-            .aligment-item {
-              p {
+            justify-content: flex-start;
+            padding-left: 150px;
+            .ant-checkbox-wrapper {
+              span {
                 font-size: 20px;
+                font-weight: 500;
+
+                &.ant-checkbox-inner {
+                  width: 30px;
+                  height: 30px;
+                }
               }
             }
           }

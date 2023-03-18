@@ -1,8 +1,6 @@
 import * as Paths from './paths';
 import SignUp from '../components/Auth/SignUp';
 import Products from '../components/Products';
-import ProductsStatistics from '../components/Products/Statistics';
-import Dispatches from '../components/Dispatches';
 
 export const authRoutes = [
   {
@@ -23,26 +21,6 @@ export const authRoutes = [
     exact: true,
     component: Products,
   },
-  {
-    title: 'Products statistics',
-    path: Paths.PRODUCT_STATISTICS,
-    exact: true,
-    component: ProductsStatistics,
-  },
-  {
-    title: 'Dispatches',
-    path: Paths.DISPATCHES,
-    exact: true,
-    component: Dispatches,
-  }
-  /*
-  {
-    title: 'Campaigns show',
-    path: Paths.SHOW_CAMPAIGN(':id'),
-    exact: true,
-    component: ShowCampaign,
-  },
-  */
 ];
 
 export const mainRoutes = [];

@@ -16,7 +16,7 @@ const columns = [
     key: 'item',
   },
   {
-    title: 'Marca',
+    title: 'Línea | Tipo | Marca',
     dataIndex: 'brand',
     key: 'brand',
   },
@@ -31,7 +31,12 @@ const columns = [
     key: 'graphic',
   },
   {
-    title: 'Código/ID',
+    title: (
+      <>
+        <p>EAN</p>
+        <p>Cód. de Barras</p>
+      </>
+    ),
     dataIndex: 'id',
     key: 'id',
   },
@@ -43,6 +48,25 @@ const columns = [
       return (
         <div className="stock-content">
           <p>{`${stock}/${record.units ?? ''}`}</p>
+        </div>
+      )
+    },
+  },
+  {
+    title: (
+      <>
+        <p>LECTURA</p>
+        <p>Caja | Casco | Talla</p>
+      </>
+    ),
+    dataIndex: 'read',
+    key: 'read',
+    render: (read, record) => {
+      return (
+        <div className="read-content">
+          <div className="circle-read" id="box" />
+          <div className="circle-read" id="helmet" />
+          <div className="circle-read" id="size" />
         </div>
       )
     },

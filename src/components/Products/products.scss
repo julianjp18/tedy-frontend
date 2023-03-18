@@ -20,5 +20,23 @@
         font-weight: 500;
       }
     }
+
+    .read-content {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+
+      .circle-read {
+        background: white;
+        border-radius: 50%;
+        border: 1px solid black;
+        width: 10px;
+        height: 10px;
+
+        &--active {
+          background-color: #20a6ff;
+        }
+      }
+    }
   }
 }

@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Row, Col } from 'antd';
+import readXlsxFile from 'read-excel-file';
 
 import './products.scss';
 import ProductsList from './ProductsList';
 import CamQR from '../CamQR';
 
 const Products = () => {
+
+  useEffect(() => {
+    readFile();
+  }, []);
+
+  const readFile = () => {
+    fetch('https://example.com/spreadsheet.xlsx')
+      .then(response => response.blob())
+      .then(blob => readXlsxFile(blob))
+      .then((rows) => {
+        console.log(rows);
+      });
+  };
 
   return (
     <Row className="products-container">

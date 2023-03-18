@@ -187,50 +187,17 @@ const CamQR = ({ cameraView = '' }) => {
             <p className="title">Criterios</p>
             <div className="response-view-content">
               <div className="aligments-content">
-                <div className="aligments-left">
-                  {['box', 'dispatch'].includes(cameraView) && (
-                    <div className="aligment-item">
-                      <Checkbox onChange={(e) => onChange(e, 'object')} checked={checkboxes.object}>Objeto</Checkbox>
-                    </div>
-                  )}
-                  {cameraView === 'helmet' && (
-                    <div className="aligment-item">
-                      <Checkbox onChange={(e) => onChange(e, 'color')} checked={checkboxes.color}>Color</Checkbox>
-                    </div>
-                  )}
-                  {['box', 'helmet', 'dispatch'].includes(cameraView) && (
-                    <div className="aligment-item">
-                      <Checkbox onChange={(e) => onChange(e, 'tag')} checked={checkboxes.tag}>Etiqueta</Checkbox>
-                    </div>
-                  )}
-                  {cameraView === 'helmet' && (
-                    <div className="aligment-item">
-                      <Checkbox onChange={(e) => onChange(e, 'size')} checked={checkboxes.size}>Talla</Checkbox>
-                    </div>
-                  )}
-                  {cameraView === 'box' && (
-                    <div className="aligment-item">
-                      <Checkbox onChange={(e) => onChange(e, 'qr_code')} checked={checkboxes.qr_code}>QR</Checkbox>
-                    </div>
-                  )}
-                  {cameraView === 'dispatch' && (
-                    <div className="aligment-item">
-                      <Checkbox onChange={(e) => onChange(e, 'tir')} checked={checkboxes.tir}>Guia TIR</Checkbox>
-                    </div>
-                  )}
+                <div className="aligment-item">
+                  <Checkbox onChange={(e) => onChange(e, 'reference')} checked={checkboxes.object}> 1. Referencia</Checkbox>
                 </div>
-                <div className="aligments-right">
-                  <div className="aligment-item">
-                    <p>{['box', 'dispatch'].includes(cameraView) ? 'CAJA' : cameraView !== '' ? 'Negro - Rojo' : '' }</p>
-                  </div>
-                  <div className="aligment-item">
-                    <p>8004645645</p>
-                  </div>
-                  <div className="aligment-item">
-                    {cameraView === 'box' && 'SI'}
-                    {cameraView === 'helmet' && 'M'}
-                    {cameraView === 'dispatch' && '726'}
-                  </div>
+                <div className="aligment-item">
+                  <Checkbox onChange={(e) => onChange(e, 'paint')} checked={checkboxes.object}>2. Gráfico (dibujo)</Checkbox>
+                </div>
+                <div className="aligment-item">
+                  <Checkbox onChange={(e) => onChange(e, 'colors')} checked={checkboxes.object}>3. Color(es)</Checkbox>
+                </div>
+                <div className="aligment-item">
+                  <Checkbox onChange={(e) => onChange(e, 'size')} checked={checkboxes.object}>4. Talla</Checkbox>
                 </div>
               </div>
             </div>
