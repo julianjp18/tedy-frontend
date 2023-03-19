@@ -21,9 +21,6 @@ const Sider = ({ push }) => {
       <SubMenu key="sub1" title="Productos">
         <Menu.Item key="products">Proceso Puesta a Punto</Menu.Item>
       </SubMenu>
-      <SubMenu key="sub2" title="Aduanas">
-        <Menu.Item key="dispatches">Despacho</Menu.Item>
-      </SubMenu>
     </Menu>
   );
 };

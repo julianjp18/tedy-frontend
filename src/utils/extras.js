@@ -28,12 +28,11 @@ export const openNotification = (type, message, description) => {
 };
 
 export const STATUS = {
-  IN_PRODUCTION: 'IN_PRODUCTION',
-  IN_STOCK: 'IN_STOCK',
-  NOT_ARRIVE: 'NOT_ARRIVE',
-  ARRIVE: 'ARRIVE',
-  ON_DOCK: 'ON_DOCK',
-  EXIT: 'EXIT'
+  pending: 'PENDIENTE',
+  box: 'CAJA',
+  tag: 'ETIQUETA',
+  completed: 'COMPLETADO',
+  helmet: 'CASCO',
 };
 
 export const COLOR_STATUS = {

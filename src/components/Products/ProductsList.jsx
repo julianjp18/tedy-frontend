@@ -1,34 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Tag } from 'antd';
-import collections from '../../utils/collections';
-import { firestoreDB } from '../../utils/firebase';
-import { COLOR_STATUS } from '../../utils/extras';
+import { COLOR_STATUS, STATUS } from '../../utils/extras';
 
 const columns = [
   {
     title: 'REC',
     dataIndex: 'rec',
     key: 'rec',
+    align: 'center',
   },
   {
     title: 'Item',
     dataIndex: 'item',
     key: 'item',
+    align: 'center',
   },
   {
     title: 'Línea | Tipo | Marca',
     dataIndex: 'brand',
     key: 'brand',
+    align: 'center',
   },
   {
     title: 'Referencia',
     dataIndex: 'reference',
     key: 'reference',
+    align: 'center',
   },
   {
     title: 'Gráficos',
     dataIndex: 'graphic',
     key: 'graphic',
+    align: 'center',
   },
   {
     title: (
@@ -37,6 +40,7 @@ const columns = [
         <p>Cód. de Barras</p>
       </>
     ),
+    align: 'center',
     dataIndex: 'id',
     key: 'id',
   },
@@ -44,6 +48,7 @@ const columns = [
     title: 'Cantidades',
     dataIndex: 'stock',
     key: 'stock',
+    align: 'center',
     render: (stock, record) => {
       return (
         <div className="stock-content">
@@ -59,14 +64,15 @@ const columns = [
         <p>Caja | Casco | Talla</p>
       </>
     ),
-    dataIndex: 'read',
-    key: 'read',
-    render: (read, record) => {
+    dataIndex: 'box_read',
+    key: 'box_read',
+    align: 'center',
+    render: (box_read, record) => {
       return (
         <div className="read-content">
-          <div className="circle-read" id="box" />
-          <div className="circle-read" id="helmet" />
-          <div className="circle-read" id="size" />
+          <div className={`circle-read${box_read ? ' circle-read--active' : ''}`} id="box" />
+          <div className={`circle-read${record.helmer_read ? ' circle-read--active' : ''}`} id="helmet" />
+          <div className={`circle-read${record.size_read ? ' circle-read--active' : ''}`} id="size" />
         </div>
       )
     },
@@ -75,78 +81,37 @@ const columns = [
     title: 'Estado',
     key: 'status',
     dataIndex: 'status',
+    align: 'center',
     render: (status) => (
       <Tag color={COLOR_STATUS[status]} key={status}>
-        {status.toUpperCase()}
+        {STATUS[status]}
       </Tag>
     ),
   },
 ];
-/*
-const columns = [
-  {
-    title: 'Fecha',
-    dataIndex: 'date',
-    key: 'date',
-  },
-  {
-    title: 'Producto - Referencia',
-    dataIndex: 'product',
-    key: 'product',
-  },
-  {
-    title: 'Código/ID',
-    dataIndex: 'id',
-    key: 'id',
-  },
-  {
-    title: 'Cantidades',
-    dataIndex: 'stock',
-    key: 'stock',
-    render: (stock, record) => {
-      return (
-        <div className="stock-content">
-          <p>{`${stock}/${record.units ?? ''}`}</p>
-        </div>
-      )
-    },
-  },
-  {
-    title: 'Estado',
-    key: 'status',
-    dataIndex: 'status',
-    render: (status) => (
-      <Tag color='#f50' key={status}>
-        {status.toUpperCase()}
-      </Tag>
-    ),
-  },
-];
-*/
 
 const ProductsList = () => {
   const [products, setproducts] = useState([]);
 
   const getData = () => {
-    const data = firestoreDB.collection(collections.PRODUCTS);
+    const newProductsList = [];
 
-    data.onSnapshot((products) => {
-      setproducts([]);
-      const newProductsList = [];
-
-      products.forEach((product) => {
-
-        if (product.data().rec) {
-          newProductsList.push({
-            ...product.data(),
-            key: product.id,
-          });
-        }
-
-      });
-
-      if (newProductsList.length > 0) setproducts(newProductsList);
+    newProductsList.push({
+      rec: 'REC-000002345',
+      item: '123456',
+      brand: 'CASCO INTEGRAL SHAFT',
+      reference: 'SH-560',
+      graphic: 'BEAST',
+      id: '7706234234234232',
+      stock: '01',
+      units: '10',
+      box_read: true,
+      helmer_read: true,
+      size_read: false,
+      status: 'pending',
     });
+
+    if (newProductsList.length > 0) setproducts(newProductsList);
   };
 
   useEffect(() => {
