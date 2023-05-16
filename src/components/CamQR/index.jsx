@@ -27,38 +27,12 @@ const INIT_RESPONSE_VALUES = {
   tir: '',
 };
   
-const CamQR = ({ cameraView = '' }) => {
+const CamQR = ({ cameraView = '', videoRef, illustrationRef }) => {
   const [cameraSection, setCameraSection] = useState(cameraView);  
   const [checkboxes, setCheckboxes] = useState(INIT_CHECKBOXES_VALUES);
   const [responseValues, setResponseValues] = useState(INIT_RESPONSE_VALUES);
-  const [position, setposition] = useState([]);
-  const [vehicle, setvehicle] = useState([]);
-
-  let token = "";
-  let instance = "";
-
-  // CONVIERTE LA IMAGEN DE BASE64 A BYTE
-  const base64toBlob = (base64Data, contentType) => {
-    contentType = contentType || '';
-    const sliceSize = 1024;
-    const byteCharacters = atob(base64Data);
-    const bytesLength = byteCharacters.length;
-    const slicesCount = Math.ceil(bytesLength / sliceSize);
-    const byteArrays = new Array(slicesCount);
-
-    for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
-      var begin = sliceIndex * sliceSize;
-      var end = Math.min(begin + sliceSize, bytesLength);
-
-      var bytes = new Array(end - begin);
-      for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
-        bytes[i] = byteCharacters[offset].charCodeAt(0);
-      }
-      byteArrays[sliceIndex] = new Uint8Array(bytes);
-    }
-    return new Blob(byteArrays, { type: contentType });
-  }
   
+  /*
   // OBTIENE EL TOKEN
   const getToken = () => {
     const form = new FormData();
@@ -95,7 +69,7 @@ const CamQR = ({ cameraView = '' }) => {
         body: 'image=' + encodeURIComponent(data_uri)
       })
       .then(function(response) {
-        /* AQUI SE DEBE OBTENER EL TEXTO QUE RESPONDE LA FUNCIÓN DE PYTHON */
+        // AQUI SE DEBE OBTENER EL TEXTO QUE RESPONDE LA FUNCIÓN DE PYTHON
 
         // SI LA LECTURA ES UNA CAJA
         // SE DEBE VALIDAR SI LA RESPUESTA ES UNA CAJA
@@ -160,6 +134,7 @@ const CamQR = ({ cameraView = '' }) => {
   useEffect(() => {
     setTimeout(start, 5000);
   }, []);
+  */
 
   const onChange = (e, fieldName) => {
     const newCheckboxes = checkboxes;
@@ -180,7 +155,16 @@ const CamQR = ({ cameraView = '' }) => {
           </div>
         </Col>
         <Col xs={8}>
-          <div className="my-camera" id="my_camera"></div>
+          {/*
+            <div className="my-camera" id="my_camera"></div>
+          */}
+          <img ref={videoRef} alt="Illustration" />
+        </Col>
+        <Col xs={8}>
+          {/*
+            <div className="my-camera" id="my_camera"></div>
+          */}
+          <img ref={videoRef} alt="Video camera" />
         </Col>
         <Col xs={8}>
           <div className="response-content">

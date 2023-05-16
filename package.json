@@ -1,5 +1,5 @@
 {
-  "name": "casa-luker-client",
+  "name": "tedy-ai-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -28,6 +28,7 @@
     "redux": "^4.0.5",
     "redux-form": "^8.3.7",
     "redux-thunk": "^2.3.0",
+    "use-sound": "^4.0.1",
     "web-vitals": "^1.0.1",
     "xlsx": "^0.18.5"
   },
