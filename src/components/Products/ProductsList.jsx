@@ -109,7 +109,7 @@ const ProductsList = () => {
       box_read: true,
       helmer_read: true,
       size_read: false,
-      status: 'pending',
+      status: 'IN_PROGRESS',
     });
 
     await firestoreDB.collection("products")

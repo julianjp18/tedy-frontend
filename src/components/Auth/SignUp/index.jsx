@@ -28,10 +28,10 @@ const SignUp = ({ goToHome, goToAuth }) => {
   const onFinish = (values) => {
     const { username, password } = values;
     
-    if (username === 'gustavo.colarado' && password === 'Test123!') {
+    if (username === 'gustavo.colorado' && password === 'Test123!') {
       openNotification('success', 'Bienvenido', '');
       localStorage.setItem('user', JSON.stringify({
-        name: 'Gustavo Colarado',
+        name: 'Gustavo Colorado',
         charge: 'Jefe de Tedy'
       }));
       localStorage.setItem('reload', false);

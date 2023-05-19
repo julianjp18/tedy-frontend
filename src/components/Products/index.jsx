@@ -7,51 +7,133 @@ import CamQR from '../CamQR';
 import { firestoreDB } from '../../utils/firebase';
 // audios
 import EanDetectedSound from '../../resources/audio/codigo_ean_detectado.mp3';
+import HelmetErrorSound from '../../resources/audio/casco_no_corresponde_a_la_caja.mp3';
+
+const HELMET_URL = 'http://localhost:5000/helmet-classification';
+const GRAYSCALE_URL = 'http://localhost:5000/grayscale-detection';
+const BARCODE_URL = 'http://localhost:5001/barcode-detection';
+
+const INIT_CHECKBOXES_VALUES = {
+  ean_code: false,
+  helmet: false,
+  pantons: false,
+  size: false,
+};
 
 const Products = () => {
-  const videoRef = useRef(null);
+  const helmetRef = useRef(null);
   const illustrationRef = useRef(null);
+  const grayScaleVideoRef = useRef(null);
+  const barCodeRef = useRef(null);
+  const [valueReaded, setValueReaded] = useState('--');
+  const [checkboxes, setCheckboxes] = useState(INIT_CHECKBOXES_VALUES);
   const [playEanDetected] = useSound(EanDetectedSound, { volume: 1 });
+  const [playHelmetError] = useSound(HelmetErrorSound, { volume: 1 });
   const [api, contextHolder] = notification.useNotification();
 
-  /*
+  /** helmet illustration */
   useEffect(() => {
-    const videoElement = videoRef.current;
-    const url = 'http://localhost:5000/video_feed';
+    const videoElement = illustrationRef.current;
 
-    const handleVideoStream = (event) => {
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        const boundary = event.data.split('\r\n')[0];
-        const parts = reader.result.split(boundary);
+    const eventSource = new EventSource(HELMET_URL);
+    eventSource.onmessage = (event) => {
+      const response = JSON.parse(event.data);
 
-        // const jsonResponse = parts[0].split('Content-Type: application/json\r\n\r\n')[1];
-        const resultText = parts[0].split('Content-Type: text/plain\r\n\r\n')[1];
-        const imageBlob = parts[1].split('Content-Type: image/jpeg\r\n\r\n')[1];
-
-        const videoResultObj = JSON.parse(jsonResponse);
-        showNotification(videoResultObj);
-
-        const imageUrl = URL.createObjectURL(new Blob([imageBlob], { type: 'image/jpeg' }));
-        videoElement.src = imageUrl;
-
-        videoElement.play();
-      };
-      reader.readAsBinaryString(event.data);
+      const imageSrc = `data:image/jpeg;base64, ${response.frame}`;
+        if (videoElement) {
+          videoElement.src = imageSrc;
+          videoElement.play();
+        }
+        if (response.ean !== '' && !localStorage.getItem('ean_helmet')) {
+          if (!response.ean) setValueReaded(`--`);
+          else localStorage.setItem('ean_helmet', response.ean);
+          if (response.ean && response.size === '') {
+            if (response.ean === localStorage.getItem('ean_box')) {
+              setValueReaded(`Código casco ${response.ean}`);
+              getDocumentByEanCode(response.ean, '');
+              setCheckboxes({
+                ...INIT_CHECKBOXES_VALUES,
+                helmet: true,
+              })
+            } else {
+              showNotification('HELMET_READ_ERROR');
+              playHelmetError();
+            }
+          }
+          if (response.ean && response.size !== '') {
+            setValueReaded(`Talla ${response.size}`);
+            getDocumentByEanCode(response.ean, response.size);
+            changeProductStatus('DONE');
+            setCheckboxes(INIT_CHECKBOXES_VALUES);
+            setCheckboxes({
+              ...INIT_CHECKBOXES_VALUES,
+              size: true,
+            })
+            localStorage.clear();
+          }
+        }
     };
-
-    const eventSource = new EventSource(url);
-    eventSource.onmessage = handleVideoStream;
-
     return () => {
       eventSource.close();
     };
   }, []);
-  */
-
+  
+  /** barcode detection */
   useEffect(() => {
-    getDocumentByEanCode('7706234234234232');
+    const videoElement = barCodeRef.current;
+
+    const eventSource = new EventSource(BARCODE_URL);
+    eventSource.onmessage = (event) => {
+      const response = JSON.parse(event.data);
+
+      const imageSrc = `data:image/jpeg;base64, ${response.frame}`;
+        if (videoElement) {
+          videoElement.src = imageSrc;
+          videoElement.play();
+        }
+        if (response.ean !== '' && !localStorage.getItem('ean_box')) {
+          setValueReaded(`Código de barras: ${response.ean}`);
+          localStorage.setItem('ean_box', response.ean);
+          showNotification('EAN_CODE');
+          playEanDetected();
+          setCheckboxes({
+            ...INIT_CHECKBOXES_VALUES,
+            ean_code: true,
+          })
+          changeProductStatus('IN_PROGRESS');
+        } else {
+          setValueReaded('--');
+        }
+    };
+    return () => {
+      eventSource.close();
+    };
   }, []);
+
+  /** gray scale video */
+  useEffect(() => {
+    const videoElement = grayScaleVideoRef.current;
+
+    const eventSource = new EventSource(GRAYSCALE_URL);
+    eventSource.onmessage = (event) => {
+      const response = JSON.parse(event.data);
+
+      const imageSrc = `data:image/jpeg;base64, ${response.frame}`;
+        if (videoElement) {
+          videoElement.src = imageSrc;
+          videoElement.play();
+        }
+    };
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+
+  const onChange = (e, fieldName) => {
+    const newCheckboxes = checkboxes;
+    newCheckboxes[fieldName] = e.target.checked;
+    setCheckboxes(newCheckboxes);
+  };
 
   const openNotification = (type = 'info', title = '', description = '') => {
     api[type]({
@@ -61,17 +143,27 @@ const Products = () => {
   };
 
   const showNotification = (action) => {
+    let type = 'warning';
+    let title = '';
+    let body = '';
     if (action === 'EAN_CODE') {
-      openNotification('success', 'Código EAN detectado', '');
+      type = 'success';
+      title = 'Código EAN detectado';
     }
     if (action === 'EAN_CODE_ERROR') {
-      openNotification('error', 'Código EAN no corresponde a REC', '');
+      type = 'error';
+      title = 'Código EAN no corresponde a REC';
     }
     if (action === 'HELMET_READ_ERROR') {
-      openNotification('error', 'Casco no corresponde a la caja', '');
+      type = 'error';
+      title = 'Casco no corresponde a la caja';
     }
     if (action === 'HELMET_READ') {
-      openNotification('success', 'Casco detectado', '');
+      type = 'success';
+      title = 'Caso detectado';
+    }
+    if (action !== '') {
+      openNotification(type, title, body);
     }
   };
 
@@ -96,28 +188,46 @@ const Products = () => {
     return reference;
   };
 
-  const getDocumentByEanCode = async (eanCode) => {
+  const getDocumentByEanCode = async (eanCode, size) => {
     const reference = await getDocumentByField('ean_code', eanCode);
     if (reference.length > 0) {
+      const payload = {
+        box_read: true,
+        helmet_read: true,
+      };
+      if (size !== '') {
+        payload.size = size;
+        payload.size_read = true;
+      }
       updateDoc(
         reference[0].id,
-        {
-          box_read: true,
-        },
-        'EAN_CODE',
-        playEanDetected
+        payload,
+        'HELMET_READ'
       );
       console.log('doc.id', reference);
     }
   }
 
-  const updateDoc = async (productId, valuesUpdated, action, audio) => {
+  const changeProductStatus = async (eanCode, status) => {
+    const reference = await getDocumentByField('ean_code', eanCode);
+      if (reference.length > 0) {
+        const payload = {
+          status,
+        };
+        updateDoc(
+          reference[0].id,
+          payload,
+          ''
+        );
+      }
+  };
+
+  const updateDoc = async (productId, valuesUpdated, action) => {
     const document = firestoreDB.collection("products").doc(productId);
     
     await document.update(valuesUpdated)
     .then(() => {
       showNotification(action);
-      audio();
     })
     .catch((error) => {
         // The document probably doesn't exist.
@@ -132,9 +242,13 @@ const Products = () => {
       <Col xs={24}>
         <h2>Proceso Puesta a Punto / Mezzanine</h2>
         <CamQR
-          cameraView='box'
-          videoRef={videoRef}
+          helmetRef={helmetRef}
           illustrationRef={illustrationRef}
+          grayScaleVideoRef={grayScaleVideoRef}
+          barCodeRef={barCodeRef}
+          valueReaded={valueReaded}
+          onChange={onChange}
+          checkboxes={checkboxes}
         />
         <h2 className="list-title">LISTADO DE ENTRADA POR COMPRA </h2>
         <ProductsList />
