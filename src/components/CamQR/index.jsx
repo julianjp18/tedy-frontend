@@ -25,7 +25,7 @@ const CamQR = ({
           </div>
         </Col>
         <Col xs={24} sm={16} lg={8}>
-          <img className="my-camera" ref={helmetRef} alt="Helmet camera" />
+          <img className="my-camera" ref={barCodeRef} alt="Bar code camera" />
         </Col>
         <Col xs={24} sm={16} lg={8}>
           <div className="response-content">
@@ -49,12 +49,14 @@ const CamQR = ({
           </div>
         </Col>
         <Col xs={24} sm={16} lg={8}>
+          <img className="my-camera" ref={helmetRef} alt="Helmet camera" />
+        </Col>
+        {/*
+        <Col xs={24} sm={16} lg={8}>
           <img className="my-camera" ref={grayScaleVideoRef} alt="gray Scale Video ref" />
         </Col>
-        <Col xs={24} sm={16} lg={8}>
-          <img className="my-camera" ref={barCodeRef} alt="Bar code camera" />
-        </Col>
         <Col xs={0} sm={0} lg={8} />
+        */}
       </Row>
     </div>
   );

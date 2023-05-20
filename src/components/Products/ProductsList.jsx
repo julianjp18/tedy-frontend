@@ -69,10 +69,11 @@ const columns = [
     key: 'box_read',
     align: 'center',
     render: (box_read, record) => {
+      console.log(record);
       return (
         <div className="read-content">
           <div className={`circle-read${box_read ? ' circle-read--active' : ''}`} id="box" />
-          <div className={`circle-read${record.helmer_read ? ' circle-read--active' : ''}`} id="helmet" />
+          <div className={`circle-read${record.helmet_read ? ' circle-read--active' : ''}`} id="helmet" />
           <div className={`circle-read${record.size_read ? ' circle-read--active' : ''}`} id="size" />
         </div>
       )
@@ -83,7 +84,7 @@ const columns = [
     key: 'status',
     dataIndex: 'status',
     align: 'center',
-    render: (status) => (
+    render: (status) => status && (
       <Tag color={COLOR_STATUS[status.toLowerCase()]} key={status}>
         {STATUS[status.toLowerCase()]}
       </Tag>
@@ -95,27 +96,10 @@ const ProductsList = () => {
   const [products, setproducts] = useState([]);
 
   const getData = async () => {
-    const newProductsList = [];
-
-    newProductsList.push({
-      rec: 'REC-000002346',
-      item: '123456',
-      brand: 'CASCO INTEGRAL SHAFT',
-      reference: 'SH-560',
-      graphics: 'BEAST',
-      ean_code: '7706234234234232',
-      stock: '01',
-      units: '10',
-      box_read: true,
-      helmer_read: true,
-      size_read: false,
-      status: 'IN_PROGRESS',
-    });
-
-    await firestoreDB.collection("products")
-    .get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
+    firestoreDB.collection("products")
+    .onSnapshot((snapshot) => {
+        const newProductsList = [];
+        snapshot.forEach((doc) => {
           const {
             rec,
             item,
@@ -126,7 +110,7 @@ const ProductsList = () => {
             stock,
             units,
             box_read,
-            helmer_read,
+            helmet_read,
             size_read,
             status,
           } = doc.data();
@@ -142,17 +126,13 @@ const ProductsList = () => {
             stock,
             units,
             box_read,
-            helmer_read,
+            helmet_read,
             size_read,
             status,
           });
         });
-    })
-    .catch((error) => {
-        console.log("Error getting documents: ", error);
+        if (newProductsList.length > 0) setproducts(newProductsList);
     });
-
-    if (newProductsList.length > 0) setproducts(newProductsList);
   };
 
   useEffect(() => {

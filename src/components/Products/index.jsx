@@ -38,11 +38,10 @@ const Products = () => {
     const eventSource = new EventSource(HELMET_URL);
     eventSource.onmessage = (event) => {
       const response = JSON.parse(event.data);
-
+      console.log(response,"response1");
       const imageSrc = `data:image/jpeg;base64, ${response.frame}`;
         if (videoElement) {
           videoElement.src = imageSrc;
-          videoElement.play();
         }
         if (response.ean !== '' && !localStorage.getItem('ean_helmet')) {
           if (!response.ean) setValueReaded(`--`);
@@ -50,26 +49,17 @@ const Products = () => {
           if (response.ean && response.size === '') {
             if (response.ean === localStorage.getItem('ean_box')) {
               setValueReaded(`Código casco ${response.ean}`);
-              getDocumentByEanCode(response.ean, '');
+              getDocumentByEanCode(response.ean, response.size || '');
               setCheckboxes({
                 ...INIT_CHECKBOXES_VALUES,
                 helmet: true,
+                size: true,
               })
+              localStorage.clear();
             } else {
               showNotification('HELMET_READ_ERROR');
               playHelmetError();
             }
-          }
-          if (response.ean && response.size !== '') {
-            setValueReaded(`Talla ${response.size}`);
-            getDocumentByEanCode(response.ean, response.size);
-            changeProductStatus('DONE');
-            setCheckboxes(INIT_CHECKBOXES_VALUES);
-            setCheckboxes({
-              ...INIT_CHECKBOXES_VALUES,
-              size: true,
-            })
-            localStorage.clear();
           }
         }
     };
@@ -85,11 +75,10 @@ const Products = () => {
     const eventSource = new EventSource(BARCODE_URL);
     eventSource.onmessage = (event) => {
       const response = JSON.parse(event.data);
-
+      console.log(response,"response2");
       const imageSrc = `data:image/jpeg;base64, ${response.frame}`;
         if (videoElement) {
           videoElement.src = imageSrc;
-          videoElement.play();
         }
         if (response.ean !== '' && !localStorage.getItem('ean_box')) {
           setValueReaded(`Código de barras: ${response.ean}`);
@@ -100,28 +89,9 @@ const Products = () => {
             ...INIT_CHECKBOXES_VALUES,
             ean_code: true,
           })
-          changeProductStatus('IN_PROGRESS');
+          changeProductStatus(response.ean,'IN_PROGRESS');
         } else {
           setValueReaded('--');
-        }
-    };
-    return () => {
-      eventSource.close();
-    };
-  }, []);
-
-  /** gray scale video */
-  useEffect(() => {
-    const videoElement = grayScaleVideoRef.current;
-
-    const eventSource = new EventSource(GRAYSCALE_URL);
-    eventSource.onmessage = (event) => {
-      const response = JSON.parse(event.data);
-
-      const imageSrc = `data:image/jpeg;base64, ${response.frame}`;
-        if (videoElement) {
-          videoElement.src = imageSrc;
-          videoElement.play();
         }
     };
     return () => {
@@ -188,17 +158,15 @@ const Products = () => {
     return reference;
   };
 
-  const getDocumentByEanCode = async (eanCode, size) => {
+  const getDocumentByEanCode = async (eanCode, size = '') => {
     const reference = await getDocumentByField('ean_code', eanCode);
     if (reference.length > 0) {
       const payload = {
         box_read: true,
         helmet_read: true,
+        size: reference[0].size,
+        size_read: true,
       };
-      if (size !== '') {
-        payload.size = size;
-        payload.size_read = true;
-      }
       updateDoc(
         reference[0].id,
         payload,
@@ -224,16 +192,17 @@ const Products = () => {
 
   const updateDoc = async (productId, valuesUpdated, action) => {
     const document = firestoreDB.collection("products").doc(productId);
-    
-    await document.update(valuesUpdated)
-    .then(() => {
-      showNotification(action);
-    })
-    .catch((error) => {
-        // The document probably doesn't exist.
-        console.error("Error updating document: ", error);
-    });
-    
+  
+    if(valuesUpdated) {  
+      await document.update(valuesUpdated)
+      .then(() => {
+        showNotification(action);
+      })
+      .catch((error) => {
+          // The document probably doesn't exist.
+          console.error("Error updating document: ", error);
+      });
+    }  
   };
 
   return (
